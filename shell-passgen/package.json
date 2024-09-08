@@ -1,0 +1,13 @@
+{
+  "name": "shell-passgen",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "A simple utility to generate random passwords with customizable options for letters, numbers, and symbols."
+}

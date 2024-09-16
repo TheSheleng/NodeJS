@@ -20,3 +20,8 @@ export default function GeneratePassword(length = 8, options = { letters: true, 
 
     return password;
 }
+
+export default function IsPalindrome(str) {
+    const cleanedStr = str.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+    return cleanedStr === cleanedStr.split('').reverse().join('');
+}

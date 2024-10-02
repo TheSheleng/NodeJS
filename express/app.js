@@ -22,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Настройка статической папки для Bootstrap
 app.use('/bootstrap', express.static(path.join(__dirname, 'node_modules', 'bootstrap', 'dist')));
+app.use('/bootstrap-icons', express.static(path.join(__dirname, 'node_modules', 'bootstrap-icons')));
 
 // Маршруты
 app.get('/', (req, res) => {

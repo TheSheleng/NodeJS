@@ -1,0 +1,18 @@
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+body {
+    background-color: #e9e9e9;
+  }
+  
+  .card img {
+    height: 200px;
+    object-fit: cover;
+  }
+  
+  .social-icons a {
+    font-size: 24px;
+  }
+  
+  .custom-purple {
+    background-color: #6f42c1;
+  }

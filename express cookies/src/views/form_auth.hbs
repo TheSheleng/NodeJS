@@ -15,7 +15,7 @@
                   </div>
                 {{/if}}
 
-                <form class="mx-1 mx-md-4" method="POST" action="/user/signin">
+                <form id="authForm" class="mx-1 mx-md-4" method="POST" action="/user/signin">
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
@@ -25,11 +25,11 @@
                     >
                       <input
                         type="text"
-                        id="form3Example1c"
+                        id="loginInput"
                         class="form-control"
                         name="login"
                       />
-                      <label class="form-label" for="form3Example1c">Your Login</label>
+                      <label class="form-label" for="loginInput">Your Login</label>
                     </div>
                   </div>
 
@@ -41,13 +41,13 @@
                     >
                       <input
                         type="password"
-                        id="form3Example4c"
+                        id="passwordInput"
                         class="form-control"
                         name="password"
                       />
                       <label
                         class="form-label"
-                        for="form3Example4c"
+                        for="passwordInput"
                       >Password</label>
                     </div>
                   </div>
@@ -82,3 +82,41 @@
     </div>
   </div>
 </section>
+
+<script>
+document.getElementById('authForm').addEventListener('submit', async (event) => {
+  event.preventDefault(); // Отменяем стандартное поведение формы
+
+  const login = document.getElementById('loginInput').value;
+  const password = document.getElementById('passwordInput').value;
+
+  try {
+    const response = await fetch('/user/signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ login, password }),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const token = data.token;
+
+      // Сохраняем токен в localStorage
+      localStorage.setItem('token', token);
+      console.log('Токен сохранен в localStorage:', token);
+      
+      // Дальше можно перенаправить пользователя на другую страницу
+      window.location.href = '/'; // Перенаправляем на главную страницу
+    } else {
+      const errorData = await response.json();
+      console.error('Ошибка:', errorData.message);
+      // Обработка ошибок (например, отображение сообщения пользователю)
+    }
+  } catch (error) {
+    console.error('Ошибка:', error);
+  }
+});
+
+</script>

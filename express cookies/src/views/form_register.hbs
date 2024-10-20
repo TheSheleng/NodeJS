@@ -9,13 +9,9 @@
 
                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
 
-                {{#if error}}
-                  <div class="alert alert-danger" role="alert">
-                    {{error}}
-                  </div>
-                {{/if}}
+                <div id="error-message" class="alert alert-danger" role="alert"></div>
 
-                <form class="mx-1 mx-md-4" method="POST">
+                <form id="registerForm" class="mx-1 mx-md-4" method="POST">
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
@@ -24,13 +20,13 @@
                       class="form-outline flex-fill mb-0"
                     >
                       <input
+                        id="registerLoginInput"
                         type="text"
-                        id="form3Example1c"
                         class="form-control"
                         name="login"
                         required
                       />
-                      <label class="form-label" for="form3Example1c">Your Login</label>
+                      <label class="form-label" for="registerLoginInput">Your Login</label>
                     </div>
                   </div>
 
@@ -41,13 +37,13 @@
                       class="form-outline flex-fill mb-0"
                     >
                       <input
+                        id="registerEmailInput"
                         type="email"
-                        id="form3Example3c"
                         class="form-control"
                         name="email"
                         required
                       />
-                      <label class="form-label" for="form3Example3c">Your Email</label>
+                      <label class="form-label" for="registerEmailInput">Your Email</label>
                     </div>
                   </div>
 
@@ -58,13 +54,13 @@
                       class="form-outline flex-fill mb-0"
                     >
                       <input
+                        id="registerPasswordInput"
                         type="password"
-                        id="form3Example4c"
                         class="form-control"
                         name="password"
                         required
                       />
-                      <label class="form-label" for="form3Example4c">Password</label>
+                      <label class="form-label" for="registerPasswordInput">Password</label>
                     </div>
                   </div>
 
@@ -75,13 +71,13 @@
                       class="form-outline flex-fill mb-0"
                     >
                       <input
+                        id="registerConfirmPasswordInput"
                         type="password"
-                        id="form3Example4cd"
                         class="form-control"
                         name="confirm_password"
                         required
                       />
-                      <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                      <label class="form-label" for="registerConfirmPasswordInput">Repeat your password</label>
                     </div>
                   </div>
 
@@ -115,3 +111,47 @@
     </div>
   </div>
 </section>
+
+<script>
+document.getElementById('registerForm').addEventListener('submit', async (event) => {
+  event.preventDefault(); // Отменяем стандартное поведение формы
+
+  const login = document.getElementById('registerLoginInput').value;
+  const email = document.getElementById('registerEmailInput').value;
+  const password = document.getElementById('registerPasswordInput').value;
+  const confirm_password = document.getElementById('registerConfirmPasswordInput').value;
+
+  try {
+    const response = await fetch('/user/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ login, email, password, confirm_password }),
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        const token = data.token;
+
+        // Сохраняем токен в localStorage
+        localStorage.setItem('token', token);
+        console.log('Токен сохранен в localStorage:', token);
+
+        // Перенаправляем на главную страницу или страницу профиля
+        window.location.href = '/'; // Или '/profile' для профиля
+    } else {
+        // Обработка ошибки
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.textContent = result.error;
+        errorMessage.style.display = 'block';
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке формы:', error);
+
+    const errorMessage = document.getElementById('error-message');
+    errorMessage.textContent = result.error;
+    errorMessage.style.display = 'block';
+  }
+});
+</script>

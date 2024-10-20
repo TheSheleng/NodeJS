@@ -2,8 +2,12 @@ import { Router } from "express";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import { logoutUser } from "../middlewares/user-middleware.js";
+import jwt from "jsonwebtoken";
+import "dotenv/config";
 
 const userRoutes = Router();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Массив для хранения пользователей
 const users = [];
@@ -17,17 +21,14 @@ userRoutes
 
     // Валидация данных
     if (!validator.isEmail(email)) {
-      return res.render("form_register", { error: "Невалидный email." });
+      return res.status(400).json({ error: 'Невалидный email.' });
     }
     if (!validator.isLength(password, { min: 6 })) {
-      return res.render("form_register", {
-        error: "Пароль должен быть минимум 6 символов.",
-      });
+      return res.status(400).json({ error: 'Пароль должен быть минимум 6 символов.' });
     }
     if (password !== confirm_password) {
-      return res.render("form_register", { error: "Пароли не совпадают." });
+      return res.status(400).json({ error: 'Пароли не совпадают.' });
     }
-
     // Проверка, существует ли пользователь с таким email
     const existingUser = users.find((user) => user.email === email);
     if (existingUser) {
@@ -52,8 +53,10 @@ userRoutes
       email,
     };
 
-    // Перенаправляем на главную страницу после успешной регистрации
-    res.redirect("/");
+    const token = jwt.sign({ login, email }, JWT_SECRET, { expiresIn: '1h' });
+    req.session.token = token; 
+
+    res.json({ token });
   });
 
 // Вход в систему (страница)
@@ -77,7 +80,11 @@ userRoutes
 
     // Успешный вход
     req.session.user = { login }; // Сохраняем пользователя в сессии
-    res.redirect("/"); // Перенаправляем на главную страницу
+
+    const token = jwt.sign({ login: user.login, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+    req.session.token = token; 
+
+    res.json({ token });
   });
 
 // Logout пользователя

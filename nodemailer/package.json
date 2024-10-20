@@ -1,13 +1,20 @@
 {
   "name": "nodemailer",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.mjs",
   "type": "module",
   "scripts": {
-    
+    "start": "node app.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-handlebars": "^8.0.1",
+    "nodemailer": "^6.9.15"
+  }
 }
